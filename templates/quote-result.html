@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quote Result
+{% endblock %}
+
+{% block main %}
+<div class="card border-primary mb-3 mx-auto" style="max-width: 25rem;">
+  <div class="card-header fs-4">Quote Result</div>
+  <div class="card-body">
+    <h4 class="card-title mb-2">{{ result.symbol }}</h4>
+    <p class="card-text fs-4">{{ result.name }}<br>{{ result.price | usd }}</p>
+  </div>
+</div>
+{% endblock %}

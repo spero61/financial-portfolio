@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block main %}
+        <div class="mb-5">
+            <label for="username">Username</label>
+            <h3>{{ username }}</h3>
+        </div>
+    <form action="/profile" method="post">
+        <div class="mb-2">
+            <label for="password" class="mb-1">Current Password</label>
+            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="" type="password" required>
+        </div>
+        <div class="mb-3">
+            <label for="new-password" class="mb-1">New Password</label>
+            <input class="form-control mx-auto w-auto" id="new-password" name="new-password" placeholder="" type="password">
+        </div>
+        <div class="mb-3">
+            <label for="new-password-confirmation" class="mb-1">New Password (Confirm)</label>
+            <input class="form-control mx-auto w-auto" id="new-password-confirmation" name="new-password-confirmation" placeholder="" type="password">
+        </div>
+        <button class="btn btn-outline-success mt-3" type="submit">Change Password</button>
+    </form>
+{% endblock %}

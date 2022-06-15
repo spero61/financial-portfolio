@@ -1,10 +1,80 @@
 {% extends "layout.html" %}
 
-{% block body %}
+{% block title %}
+    Portfolio
+{% endblock %}
 
-    <form action="/" method="post">
-        <input autocomplete="off" autofocus name="name" placeholder="Name" type="text">
-        <input type="submit">
-    </form>
+{% block main %}
+<table class="table table-hover">
+    <thead>
+        <tr class="table-secondary">
+            <th class="text-start">Symbol</th>
+            <th class="text-start">Name</th>
+            <th class="text-end">Shares</th>
+            <th class="text-end">Price</th>
+            <th class="text-end">TOTAL</th>
+        </tr>
+    </thead>
+    <tbody>
+    {# https://jinja.palletsprojects.com/en/2.11.x/templates/#for #}
+    {% for stock in stocks if not stock.shares == 0 %}
+        <tr>
+            <td class="text-start">{{ stock.symbol }}</td>
+            <td class="text-start">{{ stock.name }}</td>
+            <td class="text-end">{{ stock.shares }}</td>
+            <td class="text-end">{{ stock.price | usd }}</td>
+            <td class="text-end">{{ (stock.price * stock.shares) | usd }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td class="border-0 fw-bold text-end" colspan="4">Cash</td>
+            <td class="border-0 text-end">{{ balance | usd }}</td>
+        </tr>
+        <tr>
+            <td class="border-0 fw-bold text-end" colspan="4">TOTAL</td>
+            <td class="border-0 fw-bold text-end">{{ total | usd }}</td>
+        </tr>
+    </tfoot>
+</table>
+<canvas id="myChart" width="400" height="400"></canvas>
+<script>
+const ctx = document.getElementById('myChart').getContext('2d');
+let symbols = [];
+let amounts = [];
+let sum = 0;
+let counter = 0;
+{% for stock in stocks if not stock.shares == 0 %}
+symbols.push("{{ stock.symbol }}");
+amounts.push({{ stock.price * stock.shares }});
+sum += {{stock.price * stock.shares}}
+counter++;
+{% endfor %}
+// colors are originately from table color options at https://bootswatch.com/vapor/
+// colors.length == 7
+const bg_colors = ["rgba(111, 66, 189, 0.6)", "rgba(234, 57, 184, 0.6)", "rgba(60, 242, 129, 0.6)", "rgba(228, 76, 85, 0.6)", "rgba(255, 193, 7, 0.6)", "rgba(27, 162, 246, 0.6)", "rgba(68, 217, 232, 0.6)"];
+let border_colors = bg_colors.slice(0, bg_colors.length);
+border_colors.forEach(elem => elem.replace("0.6", "1"));
 
+// https://www.chartjs.org/docs/latest/charts/doughnut.html
+var myChart = new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: symbols,
+    datasets: [{
+      label: 'My Portfolio',
+      data: amounts,
+      backgroundColor: bg_colors,
+      borderColor: border_colors,
+      borderWidth: 2
+    }]
+  },
+  options: {
+   	//cutoutPercentage: 40,
+    responsive: false,
+
+  }
+});
+</script>
 {% endblock %}
